@@ -1,10 +1,10 @@
 import * as NavigationBar from 'expo-navigation-bar';
 import { Stack } from 'expo-router';
 import { useEffect } from 'react';
-import { Platform, View } from 'react-native';
+import { Platform, StatusBar, View } from 'react-native';
 import "../global.css";
 
-export default function rootLayout() {
+export default function RootLayout() {
   useEffect(() => {
     const prepareGUI = async () => {
       if (Platform.OS === 'android') {
@@ -15,11 +15,20 @@ export default function rootLayout() {
   }, []);
 
   return (
-    <View className="flex-1 bg-black">
+    <View style={{ flex: 1, backgroundColor: "#000" }}>
+      <StatusBar hidden />
+
       <Stack screenOptions={{ headerShown: false }}>
         <Stack.Screen name="(tabs)" />
         <Stack.Screen
           name="matchMaking"
+          options={{
+            animation: 'slide_from_bottom',
+            presentation: 'fullScreenModal'
+          }}
+        />
+        <Stack.Screen
+          name="online"
           options={{
             animation: 'slide_from_bottom',
             presentation: 'fullScreenModal'

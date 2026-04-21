@@ -19,7 +19,7 @@ export default function GameModes() {
         />
       </Pressable>
 
-      {/* Grid Modes */}
+      {/* Modes */}
       <View className="flex-row w-row gap-4">
         <Pressable 
           onPress={() => setSelectedMode('2and4')} 
