@@ -11,7 +11,7 @@ import Animated, {
   withTiming
 } from "react-native-reanimated";
 
-import { getSocket, sendMessage, subscribe } from "../Utils/socket";
+import { closeSocket, getSocket, sendMessage, subscribe } from "../Utils/socket";
 
 const { width } = Dimensions.get("window");
 
@@ -27,7 +27,7 @@ export default function Matchmaking() {
   const params = useLocalSearchParams();
 
   const totalPlayersNeeded = parseInt(params.players) || 2;
-  const currentMode = "testing"; // params.mode ||;
+  const currentMode = params.mode || "testing";
   const isTestMode = currentMode === "testing";
 
   const [playersFound, setPlayersFound] = useState(1);
@@ -59,7 +59,6 @@ export default function Matchmaking() {
         const currentPlayers = Object.keys(data.game.players).length;
         setPlayersFound(currentPlayers);
 
-        // On every join player id broadcasted so set only if not set
         if (data.player_id && !myPlayerId.current) {
           myPlayerId.current = data.player_id;
         }
@@ -90,21 +89,23 @@ export default function Matchmaking() {
   }));
 
   const handleAbort = () => {
-    sendMessage({
-      type: "leave",
-      player_id: myPlayerId.current,
-    });
+    if (myPlayerId.current) {
+      sendMessage({
+        type: "leave",
+        player_id: myPlayerId.current,
+      });
+    }
+    
+    closeSocket(); 
     router.back();
   };
 
   return (
     <View className="flex-1 bg-game-surface items-center justify-between p-6 pt-20 pb-12">
-      {/* Background Image Container */}
       <View style={StyleSheet.absoluteFill} className="opacity-10">
         <Image source={currentImage} className="w-full h-full" resizeMode="cover" blurRadius={30} />
       </View>
 
-      {/* Header Section */}
       <View className="items-center">
         <Text className="text-white/40 text-[10px] uppercase tracking-[5px] mb-2">
           {isTestMode ? "Setting Up Test Game" : "Establishing Connection"}
@@ -114,7 +115,6 @@ export default function Matchmaking() {
         </Text>
       </View>
 
-      {/* Center Animation Section */}
       <View className="items-center justify-center w-full">
         <Animated.View
           style={animatedPulseStyle}
@@ -132,7 +132,6 @@ export default function Matchmaking() {
             resizeMode="cover"
             blurRadius={8}
           />
-
           <Image source={currentImage} className="w-full h-full" resizeMode="contain" />
 
           <View className="absolute bottom-6 bg-game-accent/90 px-5 py-1.5 rounded-full border border-game-primary/50">
@@ -143,7 +142,6 @@ export default function Matchmaking() {
         </View>
       </View>
 
-      {/* Footer Button */}
       <Pressable
         onPress={handleAbort}
         className="w-full py-5 rounded-full border border-white/5 bg-white/5"

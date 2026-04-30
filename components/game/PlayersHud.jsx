@@ -28,6 +28,7 @@ function PlayerHud({
   position,
   hasLeft,
   isBot,
+  rotation = 0
 }) {
   const [finishedCount, playerIndex] = Array.isArray(playerData)
     ? playerData

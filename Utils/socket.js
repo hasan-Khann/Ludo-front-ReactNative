@@ -30,7 +30,7 @@ export const getSocket = () => {
     };
 
     socket.onerror = (e) => {
-      console.log("Socket error:", e.message);
+      console.log("Socket error:", e?.message || "Connection failed");
     };
 
     socket.onclose = () => {
@@ -64,8 +64,12 @@ export const sendMessage = (data) => {
 
 export const closeSocket = () => {
   if (socket) {
+    listeners.clear();
     socket.close();
     socket = null;
+  } else {
+    listeners.clear();
   }
-  listeners.clear();
+  isConnecting = false;
+  messageQueue = [];
 };
