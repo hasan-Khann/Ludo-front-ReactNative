@@ -8,7 +8,7 @@ export const getSocket = () => {
   if (!socket && !isConnecting) {
     isConnecting = true;
 
-    socket = new WebSocket("ws://192.168.1.104:8000/ws");
+    socket = new WebSocket("ws://192.168.1.103:8000/ws");
 
     socket.onopen = () => {
       console.log("Socket connected");

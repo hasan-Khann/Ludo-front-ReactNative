@@ -27,7 +27,7 @@ export default function Matchmaking() {
   const params = useLocalSearchParams();
 
   const totalPlayersNeeded = parseInt(params.players) || 2;
-  const currentMode = params.mode || "testing";
+  const currentMode = "testing"; // params.mode || 
   const isTestMode = currentMode === "testing";
 
   const [playersFound, setPlayersFound] = useState(1);
@@ -79,7 +79,9 @@ export default function Matchmaking() {
     });
 
     return () => {
-      if (unsub) unsub();
+      if (unsub){ 
+        unsub();
+      }
     };
   }, [totalPlayersNeeded, currentMode]);
 
